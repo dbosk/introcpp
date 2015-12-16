@@ -1,0 +1,135 @@
+% $Id$
+% Author: Daniel Bosk <daniel.bosk@miun.se>
+\documentclass[a4paper]{miunasgn}
+\usepackage[utf8]{inputenc}
+\usepackage[english,swedish]{babel}
+\usepackage{url,hyperref}
+\usepackage{prettyref,varioref}
+\usepackage{natbib}
+\usepackage{color,listings}
+\usepackage[nofancy,today]{svninfo}
+\usepackage[natbib,varioref,prettyref,listings]{miunmisc}
+
+\svnInfo $Id$
+%\printanswers
+
+\courseid{DT028G}
+\course{Introduktion till programmering}
+\assignmenttype{Projekt}
+\title{En kontaktbok}
+\author{Daniel Bosk\footnote{%
+	Detta verk är tillgängliggjort under licensen Creative Commons 
+	Erkännande-DelaLika 2.5 Sverige (CC BY-SA 2.5 SE).
+	För att se en sammanfattning och kopia av licenstexten besök URL 
+	\url{http://creativecommons.org/licenses/by-sa/2.5/se/}.
+}}
+\date{\svnId}
+
+\begin{document}
+\maketitle
+\thispagestyle{foot}
+\tableofcontents
+
+
+\section{Introduktion}
+\noindent
+Det är mycket information som ska hållas ordning på för den moderna människan.
+Kontaktuppgifter för andra människor är en del av den.
+Som hjälpmedel har vi exempelvis Contacts i Googles GMail, Facebook eller 
+telefonböcker av alla de slag i mobiltelefonen.
+I detta projekt ska du fördjupa dig i vad det krävs av ett program som ska 
+hantera denna typ av information.
+
+
+\section{Syfte}
+\noindent
+Syftet är att fördjupa dina kunskaper inom och utveckla din vana för 
+programmering.
+Du kommer att få fördjupade kunskaper om hur datastrukturerna som presenterats 
+under kursens gång kan tillämpas.
+
+
+\section{Teori}
+\label{sec:Theory}
+\noindent
+De datastrukturer du kan ha nytta av i detta projekt är bland andra
+\begin{itemize}
+	\item \code{std::map} eller \code{std::multimap},
+	\item \code{std::vector}, och
+	\item \code{std::fstream}.
+\end{itemize}
+
+
+\section{Uppgift}
+\label{sec:Tasks}
+\noindent
+\input{grades.tex}
+
+\subsection{Grunduppgift}
+\noindent
+Skapa en grundläggande kontaktbok där man kan lagra och sedan ta fram 
+information om kontakter.
+Den information som (åtminstone) ska kunna lagras är
+\begin{itemize}
+	\item namn,
+	\item (post-) adress,
+	\item e-postadress,
+	\item telefonnummer,
+	\item födelsedag, och
+	\item övrigt.
+\end{itemize}
+
+Gränssnittet ska fungera på följande sätt.
+Användaren ska kunna välja vad denne vill göra, exempelvis lägga till en 
+kontakt eller hitta telefonnumret för en given kontakt.
+Det finns flera sätt att implementera detta, exempelvis:
+\begin{itemize}
+	\item Att ha en meny där användaren får välja genom att mata in ett tal 
+		motsvarande ett av menyalternativen.
+		Avsluta ska vara ett av alternativen.
+  \item Att ha ett kommandodrivet gränssnitt där användaren ger kommandon för 
+    vad som ska göras, exempelvis: ''add Adam 070-1234567''.
+\end{itemize}
+
+Den funktionalitet som ska finnas är
+\begin{itemize}
+	\item att lägga till en kontakt,
+  \item att ta bort en kontakt, och
+	\item att söka efter en kontakt.
+\end{itemize}
+
+Kontaktboken ska sparas i en fil för att den inte ska försvinna mellan 
+körningarna av programmet.
+(Det vore en tämligen meningslös kontaktbok om den inte kommer ihåg kontakterna 
+längre än dess användare.)
+
+\subsection{Extrauppgift C}
+\noindent
+Programmet ska inte kunna kraschas av användaren.
+Exempelvis, om användaren matar in fel typ av data ska programmet be om ny data 
+istället för att avslutas.
+Eller om kontaktbokens fil är korrupt, då ska programmet tala om för användaren 
+att något är fel och att kontaktboken inte kunde laddas.
+Den ska alltså inte ge ''Gatvägen 20, 12345 Astad'' som telefonnummer, eller 
+dylikt, för en kontakt.
+
+\subsection{Extrauppgift A}
+\noindent
+Vid sökning ska programmet söka efter söksträngen i alla fält för kontakterna.
+Matchningen ska också vara okänslig för om versaler eller gemener används.
+Exempelvis om jag söker efter strängen \emph{ada}, då ska programmet lista 
+kontakterna \emph{Ada Arvidsson}, \emph{Adam Allsing} och \emph{Cecilia 
+Adamsdotter}.
+Eftersom att det ska söka i alla fält ska det även lista alla kontakter som bor 
+på \emph{Ada Lovelaces väg} eller som har \emph{Adamstorp} som postort.
+Den ska även matcha delsträngar: en sökning på ''torp'' ska ge personer med 
+postort ''Adamstorp'' i resultatet.
+
+
+
+%%% EXAMINATION %%%
+\input{exam.tex}
+
+
+%\bibliography{literature}
+\end{document}

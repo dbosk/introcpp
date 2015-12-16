@@ -1,0 +1,119 @@
+% $Id$
+% Author: Daniel Bosk <daniel.bosk@miun.se>
+\documentclass[a4paper]{miunasgn}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english,swedish]{babel}
+\usepackage{url,hyperref}
+\usepackage{prettyref,varioref}
+\usepackage{natbib}
+\usepackage{color,listings}
+\usepackage[nofancy,today]{svninfo}
+\usepackage[natbib,varioref,prettyref,listings]{miunmisc}
+
+\svnInfo $Id$
+%\printanswers
+
+\courseid{DT028G}
+\course{Introduktion till programmering}
+\assignmenttype{Laboration}
+\title{Att räkna antalet förekomster av ord i en text}
+\author{Daniel Bosk\footnote{%
+	Detta verk är tillgängliggjort under licensen Creative Commons 
+	Erkännande-DelaLika 2.5 Sverige (CC BY-SA 2.5 SE).
+	För att se en sammanfattning och kopia av licenstexten besök URL 
+	\url{http://creativecommons.org/licenses/by-sa/2.5/se/}.
+}}
+\date{\svnId}
+
+\begin{document}
+\maketitle
+\thispagestyle{foot}
+\tableofcontents
+
+
+\section{Introduktion}
+\noindent
+År 1986 gav Jon Bentley\footnote{%
+	Skapare av bland annat datastrukturen \(k\)-dimensionella träd.
+} en utmaning till Donald Knuth\footnote{%
+	Bland annat fader till modern datalogi och skapare av \TeX.
+}.
+Utmaningen var att med \emph{literate programming} skapa ett program som skulle 
+läsa innehållet i en text och bestämma de \(n\) mest förekommande orden och 
+skriva ut en sorterad lista tillsammans med antalet förekomster av respektive 
+ord.
+Knuth löste naturligtvis problemet.
+Likaså gjorde Douglas McIlroy\footnote{%
+	Skapare av bland annat UNIX:s \emph{pipelines}, på svenska närmast kallat 
+	rör.
+}, fast med ett mycket kort skalskript.
+McIlroys lösning följer:
+\begin{src}
+n=10
+cat hitchhikersguide.txt | \
+	tr -cs A-Za-z '\n' | \
+	tr A-Z a-z | \
+	sort | \
+	uniq -c | \
+	sort -rn | \
+	head -n $n
+\end{src}
+Denna kan köras direkt i terminalen på ett UNIX-likt system och varje kommando 
+har en manualsida där du kan läsa om vad kommandot gör med de givna argumenten.
+
+
+\section{Syfte}
+\noindent
+Syftet med laborationen är att du ska få bekanta dig med ytterligare några 
+C++-konstruktioner och tillämpa dessa för att lösa ett problem.
+En av de C++-konstruktioner som är nya för denna laboration är 
+\texttt{std::map}.
+
+
+\section{Läsanvisningar}
+\label{sec:Prerequisites}
+\noindent
+Du bör ha läst om följande datastrukturer i standardbiblioteket för C++:
+\begin{itemize}
+	\item \texttt{std::string},
+	\item \texttt{std::vector}, och
+	\item \texttt{std::map}.
+\end{itemize}
+Därefter bör du ha läst om följande funktioner från standardbibliotekets 
+algoritmdel:
+\begin{itemize}
+	\item \texttt{std::transform},
+	\item \texttt{std::sort},
+	\item \texttt{std::find},
+	\item \texttt{std::count},
+	\item \texttt{std::max\_element},
+	\item \texttt{std::unique}.
+\end{itemize}
+Följande funktioner från C-biblioteket kan också vara behjälpliga:
+\begin{itemize}
+	\item tolower(3),
+	\item toupper(3).
+\end{itemize}
+
+Du kan läsa om standardbiblioteket i kurslitteraturen \cite{Deitel2012cht} 
+eller någon referens, exempelvis \emph{C++ Reference} \cite{cppref}, eller 
+manualsidorna.
+
+
+\section{Uppgift}
+\label{sec:Tasks}
+\noindent
+Du ska lösa Bentleys problem till Knuth.
+Som indata har du en textfil innehållandes ett kortare utdrag ur \emph{The 
+Hitchhiker's Guide To The Galaxy}, du finner den på lärplattformen.
+Utdata från ditt program ska vara de \(n\) mest förekommande orden sorterade 
+i ordningen mest förekommande först.
+Det variabla antalet \(n\) ska enkelt kunna ändras i programmet.
+
+
+\input{exam.tex}
+
+
+\bibliography{literature}
+\end{document}

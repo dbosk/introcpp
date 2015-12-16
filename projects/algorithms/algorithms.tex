@@ -1,0 +1,110 @@
+% $Id$
+% Author: Martin Kjellqvist <martin.kjellqvist@miun.se>
+\documentclass[a4paper]{miunasgn}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[hyphens]{url}
+\usepackage{hyperref}
+\usepackage{prettyref,varioref}
+\usepackage{natbib}
+\usepackage{color,listings}
+\usepackage[nofancy,today]{svninfo}
+\usepackage[natbib,varioref,prettyref,listings]{miunmisc}
+
+\svnInfo $Id$
+%\printanswers
+
+\courseid{DT028G}
+\course{Introduktion till programmering}
+\assignmenttype{Projekt}
+\title{algoritmer i std::}
+\author{Martin Kjellqvist\footnote{%
+  Detta verk är tillgängliggjort under licensen Creative Commons 
+  Erkännande-DelaLika 2.5 Sverige (CC BY-SA 2.5 SE).
+	För att se en sammanfattning och kopia av licenstexten besök URL 
+	\url{http://creativecommons.org/licenses/by-sa/2.5/se/}.
+}}
+\date{\svnId}
+
+\begin{document}
+\maketitle
+\thispagestyle{foot}
+\tableofcontents
+
+
+\section{Introduktion}
+\noindent
+Standardbiblioteket innehåller många intressanta algoritmer som vi inte haft
+utrymme att fördjupa oss i.  
+
+
+\section{Syfte}
+\noindent
+Detta projekt består av en orientering och fördjupning av de vanligaste algoritmerna i std::.
+
+Du kommer även att undersöka iteratorer för filströmmar.
+
+\section{Teori}
+\label{sec:Theory}
+\noindent
+Dokumentation för samtliga strukturer och funktioner hittar ni på \href{www.cplusplus.com}.
+
+\section{Uppgift}
+\label{sec:Tasks}
+\noindent
+\input{../grades.tex}
+
+För varje deluppgift ska du förutom kod ge en beskrivning av 
+de inblandade funktionerna. Beskrivningen ska förklara din kod. 
+Ge beskrivningen som kommentarer i din kod.
+
+\subsection{Grunduppgift}
+\noindent
+Skapa en \code{vector<int>} innehållande 1\,000\,000 slumpelement använd 
+funktionerna \code{generate} och \code{rand}.
+Sortera elementen med \code{sort}.
+
+Undersök med funktionen \code{find} om något av elementen 0, 1 eller 20 finns 
+i din vector.
+Undersök även med funktionen \code{binary_search} om något av elementen 0, 
+1 eller 20 finns i din vector.
+Beskriv skillnaden mellan \code{find} och \code{binary_search}.
+
+Funktionerna hittar du i \code{<algorithm>}.
+
+\subsection{Extrauppgift C}
+\noindent
+Undersök om det finns dubletter i din vector. Använd \code{adjacent_find}.
+Skriv ut det första dublettvärdet i din serie. Skriv ut det sista
+dublettvärdet. 
+
+Beräkna summan av alla element i din vector. Använd \code{accumulate}.
+
+Negera alla värden i din vector. Använd \code{transform} och \code{negate}.
+Negate finns i \code{<functional>}.
+
+\subsection{Extrauppgift B}
+\noindent
+Demonstrera funktionen \code{copy} genom att kopiera samtliga värden
+från din vector till en list. Använd \code{back_insert_iterator}.
+
+Demonstrera \code{copy} genom att kopiera din vectors värden till en utfil $A$. 
+Använd \code{ostream} och \code{ostream_iterator}. Se \code{<iterator>}. 
+
+\subsection{Extrauppgift A}
+\noindent
+Skriv en mall-funktion som implementerar shellsort \cite{Wikipedia2012s}.
+Funktionen ska ha följande deklaration:
+\begin{src}
+template <typename T>
+void shellsort(T begin, T end);
+\end{src}
+Använd hoppen som beskrivs i \cite{clura2001shellsortavg}.
+Dessa hopp finns även angivna i \cite{Wikipedia2012s}.
+
+%%% EXAMINATION %%%
+\input{exam.tex}
+
+
+\bibliography{literature}
+\end{document}

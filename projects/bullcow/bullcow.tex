@@ -1,0 +1,215 @@
+% $Id$
+% Author: Daniel Bosk <daniel.bosk@miun.se>
+\documentclass[a4paper]{miunasgn}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english,swedish]{babel}
+\usepackage[hyphens]{url}
+\usepackage{hyperref}
+\usepackage{prettyref,varioref}
+\usepackage{natbib}
+\usepackage{color,listings}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[nofancy,today]{svninfo}
+\usepackage[natbib,varioref,prettyref,listings,algorithm]{miunmisc}
+
+\svnInfo $Id$
+%\printanswers
+
+\theoremstyle{definition}
+\newtheorem{example}{Exempel}
+
+\courseid{DT028G}
+\course{Introduktion till programmering}
+\assignmenttype{Projekt}
+\title{Ett härligt parti \emph{Bulls and Cows}}
+\author{Daniel Bosk\footnote{%
+	Detta verk är tillgängliggjort under licensen Creative Commons 
+	Erkännande-DelaLika 2.5 Sverige (CC BY-SA 2.5 SE).
+	För att se en sammanfattning och kopia av licenstexten besök URL 
+	\url{http://creativecommons.org/licenses/by-sa/2.5/se/}.
+}}
+\date{\svnId}
+
+\begin{document}
+\maketitle
+\thispagestyle{foot}
+\tableofcontents
+
+
+\section{Introduktion}
+\noindent
+\emph{Bulls and Cows}, av vilket \emph{Mastermind} är en känd variant, är ett 
+klassiskt kodknäckningsspel för två spelare där det går ut på att gissa sig 
+vilket tal som motståndaren tänker på.
+De två rollerna i spelet är alltså en \emph{kodmakare}, som hittar på talet, 
+och en \emph{kodknäckare}, som ska lista ut talet.
+
+Spelet fungerar enligt följande.
+Jag tänker på ett fyrsiffrigt tal där varje siffra endast får förekomma en 
+gång, upprepningar är alltså inte tillåtna, och du ska gissa på vilket tal det 
+är.
+Utifrån din gissning svarar jag med ett antal \emph{bulls} eller \emph{cows}.
+Du får en bull för varje siffra i talet som är på rätt plats och en cow för 
+varje siffra som är rätt men på fel plats.
+(Notera att du får inte veta vilka tal som gav dig bull eller cow.)
+För siffror som inte är med i talet får du ingenting.
+Därefter får du gissa igen utifrån den information du har fått.
+Detta illustreras enklast med ett exempel.
+
+\begin{example}\label{ex:BullCow}
+	Jag tänker på talet 1234.
+	Din första gissning är 1437.
+  Du får då som svar två bulls för ettan och trean, och du får en
+  cow för fyran.
+  Du gissar härnäst på 2437 och får då svaret en bull för trean och två cows 
+  för tvåan och fyran.
+  Sedan fortsätter spelet tills du fått fyra bulls som svar.
+\end{example}
+
+Notera återigen att du inte får veta för vilka siffror du får bulls respektive 
+cows, detta får du veta här enbart för att exemplet ska vara tydligt.
+
+Det finns lite olika angripssätt för att lista ut talet, se 
+\prettyref{sec:Theory}, och i detta projekt kommer du att titta på ett av dem, 
+men fokus kommer att ligga på att implementera spelet.
+
+Notera att Mastermind och Bulls and Cows skiljer sig något.
+I Bulls and Cows får siffrorna inte upprepas, vilket de får göra i Mastermind.
+I Mastermind används också (oftast) bara talen 1-6 medan talen 0-9 används 
+i Bulls and Cows.
+
+
+\section{Syfte}
+\noindent
+Syftet är att fördjupa dina kunskaper inom och utveckla din vana för 
+programmering.
+I detta projekt kommer du att fokusera på algoritmer, datastrukturer och i viss 
+utsträckning representera dessa data i filer.
+
+
+\section{Teori}
+\label{sec:Theory}
+\noindent
+\citet{Knuth1977tca} föreslog något år efter att spelet Mastermind först 
+släptes en algoritm för att knäcka koden med som mest fem försök.
+Många andra har också föreslagit olika algoritmer för att lösa problemet att 
+knäcka koden 
+\cite[exempelvis][]{Neuwirth1982ssf,Vomlel2004bni,Goddard2004mr,Kooi2005yam,Slovesnov2011soo}.
+I detta projekt ska du till en början titta på en enkel algoritm för att lösa 
+problemet, den algoritm du ska använda dig av ges 
+i \prettyref{alg:bullcow-simple}.
+
+\begin{algorithm}[t]
+	\begin{algorithmic}[1]
+		\Require{%
+			En mängd \( G = \{ (g_i, a_i) \} \) av gissningar \(g_i\) med respektive 
+			svar \(a_i\).
+		}
+		\Ensure{%
+			En ny gissning \(g\) som inte redan finns i \(G\).
+		}
+		\Statex
+		\Function{BullsCows}{$x, y$}
+			\State\Return Antalet \emph{bulls} och \emph{cows} när \(x\) jämförs med 
+			\(y\).
+			\Comment Detta ger samma resultat oavsett om \(x\) eller \(y\) används 
+			som hemligt värde.
+		\EndFunction
+		\Statex
+		\Function{GiltigGissning}{$g, G$}
+			\ForAll{$g_i\in G$}
+				\If{\Call{BullsCows}{$g, g_i$} $\neq a_i$}
+					\State \Return falskt
+				\EndIf
+			\EndFor
+			\State \Return sant
+		\EndFunction
+		\Statex
+		\Function{GenereraGissning}{$G$}
+			\If{$G = \emptyset$}\Comment Detta garanterar att \(g\not\in G\).
+				\State Låt \(g = 1023\).
+			\Else
+				\State Låt \(g\) vara den största gissningen i \(G\) adderad med ett.
+			\EndIf
+			\While{\Call{GiltigGissning}{$g, G$} = falskt}\Comment Genomför detta 
+			tills att vi hittar en giltig gissning.
+				\State Öka \(g\) till nästa tal med distinkta siffror.
+			\EndWhile
+			\State \Return \(g\)
+		\EndFunction
+	\end{algorithmic}
+  \caption{En enkel algoritm för att generera en gissning för spelet Bulls and 
+  Cows.}
+	\label{alg:bullcow-simple}
+\end{algorithm}
+
+Algoritm \ref{alg:bullcow-simple} har funktionen \textsc{GenereraGissning} för 
+att generera en gissning utifrån tidigare gissningar, eller en initial gissning 
+om inga tidigare gissningar finns.
+Algoritmen garanteras avslut om gissningarna och svaren i mängden \(G\) stämmer 
+överens.
+Således, om kodmakaren fuskar genom att under spelets gång byta sitt hemliga 
+tal är resultatet av \prettyref{alg:bullcow-simple} odefinierat.
+
+
+\section{Uppgift}
+\label{sec:Tasks}
+\noindent
+\input{grades.tex}
+
+\subsection{Grunduppgift}
+\noindent
+I grundutförandet ska du implementera en version av spelet där programmet 
+gissar på talet som användaren tänker på.
+Det vill säga programmet agerar kodknäckare och användaren kodmakare.
+Detta kan du göra genom att implementera \prettyref{alg:bullcow-simple}.
+Användaren tänker alltså på ett tal, programmet skriver ut gissningarna på 
+skärmen och användaren matar in antalet bulls och cows.
+
+\subsection{Extrauppgift C}
+\noindent
+Ditt program ska ha felhantering.
+Det ska kunna detektera när användaren har fuskat (eller bara tänkt fel) för 
+att programmet inte ska fortsätta i all evighet.
+En lösning i likhet med att införa en maxgräns på 1000 gissningar är dock inte 
+giltig, programmet ska säga till precis när det går att avgöra att användaren 
+gjort fel -- helst med en kommentar i stil med ''Ye cheatin' scum!''.
+
+Med felhantering menas även att programmet ska hantera om en användare matar in 
+fel, exempelvis om denne matar in bokstäver där det förväntas heltal.
+Sammanfattningsvis, en användare ska inte kunna krascha programmet.
+
+\subsection{Extrauppgift B}
+\noindent
+Utöka ditt program så att användaren kan agera kodknäckare och programmet är 
+kodmakare, det vill säga ombytta roller jämfört med grunduppgiften.
+Du ska även skapa en highscorelista.
+
+\subsection{Extrauppgift A}
+\noindent
+I denna extrauppgift ges flera alternativ.
+Du väljer ett av dessa som du implementerar i ditt program.
+\begin{itemize}
+	\item Använd funktionerna i ditt program för att låta programmet spela mot 
+		sig självt och med hjälp av highscorefunktionen skapa statistik för vilka 
+		tal som är svårast för algoritmen att knäcka.
+	\item Implementera en förbättrad kodknäckningsalgoritm.
+	\item Alla val ska kunna göras via argument till programmet från terminalen.
+		Du kan använda biblioteket getopt(3).
+		Exempelvis om den exekverbara filen heter \texttt{bullcow} och vi vill 
+		specificera att highscorelistan ska lagras i filen \texttt{highscore.txt}:
+		\begin{terminal}
+$ ./bullcow -f highscore.txt
+		\end{terminal}
+\end{itemize}
+
+
+%%% EXAMINATION %%%
+\input{exam.tex}
+
+
+\bibliography{literature}
+\end{document}

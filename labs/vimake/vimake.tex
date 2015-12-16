@@ -1,0 +1,173 @@
+% $Id$
+% Author: Daniel Bosk <daniel.bosk@miun.se>
+\documentclass[a4paper]{miunasgn}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english,swedish]{babel}
+\usepackage{url,hyperref}
+\usepackage{prettyref,varioref}
+\usepackage{natbib}
+\usepackage{color,listings}
+\usepackage[nofancy,today]{svninfo}
+\usepackage[natbib,varioref,prettyref,listings]{miunmisc}
+
+\svnInfo $Id$
+%\printanswers
+
+\lstset{style=term}
+
+\courseid{DT028G}
+\course{Introduktion till programmering}
+\assignmenttype{Laboration}
+\title{Vim, GNU make och Hello World!}
+\author{Daniel Bosk\footnote{%
+	Detta verk är tillgängliggjort under licensen Creative Commons 
+	Erkännande-DelaLika 2.5 Sverige (CC BY-SA 2.5 SE).
+	För att se en sammanfattning och kopia av licenstexten besök URL 
+	\url{http://creativecommons.org/licenses/by-sa/2.5/se/}.
+}}
+\date{\svnId}
+
+\begin{document}
+\maketitle
+\thispagestyle{foot}
+\tableofcontents
+
+
+\section{Introduktion}
+\noindent
+För att kunna redigera din källkod krävs att du har tillgång till och kan 
+använda en bra editor.
+När du sedan är klar med kodskrivandet underlättar det att ha ett byggskript 
+för att kompilera din kod till exekverbar kod.
+Detta underlättar avsevärt när din kodbas växer, och det är därför bra att 
+börja i tid.
+
+
+\section{Syfte}
+\noindent
+Syftet med laborationen är att du ska bekanta dig med en bra editor och att du 
+ska lära dig att skriva enkla byggskript för att hantera dina projekt.
+
+
+\section{Läsanvisningar}
+\label{sec:Prerequisites}
+\noindent
+För att genomföra laborationen behöver du orientera dig i språket C++, du bör 
+alltså ha läst det första kapitlet i kursboken \cite{Deitel2012cht}.
+
+Utöver detta ska du bekanta dig med GNU make(1).
+Du börjar med detta genom att läsa de inledande delarna av dokumentationen 
+\cite[avsnitt 1.1 till och med 2.2]{gnumake}.
+
+Texteditorn vim(1) lär du dig genom att köra vimtutor(1), mer om detta under 
+\prettyref{sec:Tasks}.
+
+Som referens för de olika kommandona har du även manualsidorna för de olika 
+kommandona; make(1), vim(1) och vimtutor(1).
+Du öppnar dem genom kommandoraderna
+\begin{terminal}
+$ man 1 make
+$ man 1 vim
+\end{terminal}
+som du skriver direkt i terminalen.
+
+
+\section{Uppgift}
+\label{sec:Tasks}
+\noindent
+Denna uppgift är uppdelad i två delar.
+Den första handlar om att lära sig använda en riktig editor, nämligen vim(1).
+Den andra delen handlar om att lära sig använda make(1) för att skapa 
+byggskript som automatiskt kompilerar källkoden till objektkod och länkar dessa 
+till en exekverbar fil.
+
+\subsection{Vim}
+\noindent
+Det första du ska göra är att genomföra hela vimtutor(1).
+Det är en praktisk tutorial för att snabbt komma igång med vim(1).
+Du startar den genom att köra följande kommandorad:
+\begin{terminal}
+$ vimtutor
+$
+\end{terminal}
+
+\subsection{GNU make}
+\noindent
+Ett byggskript för GNU make(1) är en vanlig textfil, vanligtvis döpt till 
+\emph{Makefile}\footnote{%
+	Detta underlättar eftersom att make(1) automatiskt tittar efter en fil döpt 
+	till \emph{Makefile}, notera att namnet ska inledas med versal.
+}.
+Filen innehåller vad man kallar för mål\footnote{%
+	\emph{Eng.} target.
+}.
+Målet är en fil som make(1) kommer att försöka skapa.
+Varje mål har vad man kallar för förutsättningar eller beroenden\footnote{%
+	\emph{Eng.} prerequisites, depends.
+} som behövs för att skapa målet.
+Därefter har målet ett recept\footnote{%
+	\emph{Eng.} recipe.
+} för att skapa målet utifrån beroendena.
+Receptet består av skalkod, det vill säga vanliga kommandon som kan köras 
+i terminalen.
+Strukturellt ser det ut som följer.
+\begin{source}
+target: depend1 depend2
+	shell commands to produce target from depends
+	shell commands ...
+\end{source}
+Notera att skalkommandona måste vara indenterade med \emph{ett} tabbtecken.
+
+make(1) kommer att undersöka om målet finns, om det inte finns ska det skapas.
+Om målet finns och är äldre än någon av filerna som det beror på kommer det att 
+skapas på nytt.
+Om målet däremot finns och är nyare än alla beroenden kommer make(1) att säga 
+att målet är färskt och inte behöver uppdateras.
+På detta sätt behöver man inte bygga om ett helt projekt bara för att en 
+källfil ändrats, det räcker då att skapa ny objektkod för den filen och sedan 
+länka alla objektfiler igen.
+
+För att skapa den exekverbara filen \texttt{program} från källfilen 
+\texttt{main.cpp} kan vi ha följande kod i filen \texttt{Makefile}:
+\begin{source}
+program: main.cpp
+	g++ -o program main.cpp
+\end{source}
+Därefter för att bygga vårt program och testköra skriver vi och får tillbaka 
+följande rader i terminalen:
+\begin{terminal}
+$ make
+g++ -o program main.cpp
+$ ./program
+Hello World!
+$ make
+make: `program' is up to date.
+$
+\end{terminal}
+Notera att när vi försöker bygga programmet igen säger make(1) att 
+\texttt{program} inte behöver byggas igen.
+
+Att make(1) först tittar om målet finns som fil kan utnyttjas till andra saker.
+Exemeplvis om man har ett mål vars recept aldrig skapar filen med målets namn 
+kommer receptet att köras varje gång.
+Detta gör att man kan skapa mål för att genomföra testning.
+För att få make(1) att köra ett givet mål anges målets namn som argument till 
+make(1), exempelvis:
+\begin{terminal}
+$ make test
+[kör receptet för test]
+$
+\end{terminal}
+Om inget mål anges som argument används det översta målet i \texttt{Makefile}.
+
+Det du ska göra är att skriva ett ''Hello World!''-program och skriva en 
+tillhörande \texttt{Makefile} med ett mål för programmet och ett mål med namnet 
+\emph{test} för att testköra det.
+
+
+\input{exam.tex}
+
+
+\bibliography{literature}
+\end{document}

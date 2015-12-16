@@ -1,0 +1,151 @@
+\documentclass[a4paper]{miunasgn}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english,swedish]{babel}
+\usepackage{url,hyperref}
+\usepackage{prettyref,varioref}
+\usepackage{natbib}
+\usepackage{listings}
+\usepackage[today,nofancy]{svninfo}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage[natbib,varioref,prettyref,listings,algorithm]{miunmisc}
+%\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+%\renewcommand{\algorithmicensure}{\textbf{Output:}}
+%Sample lab assignment, based on a Lab by Daniel Bosk. 
+
+%\svnInfo $Id$
+%\printanswers
+
+\courseid{dt028g}
+\course{Introduktion till programmering i C++}
+\assignmenttype{Laboration}
+\title{Sortering}
+\author{Martin Kjellqvist\footnote{%
+	E-post: \href{mailto:martin.kjellqvist@miun.se}{martin.kjellqvist@miun.se}.
+}}
+%\date{\svnId}
+
+\begin{document}
+\maketitle
+\thispagestyle{foot}
+%\tableofcontents
+
+\section{Introduktion}
+\label{sec:Introduktion}
+\noindent
+Sortering är en väldigt vanlig uppgift för datorprogram.
+Metoderna för sortering är många och av varierande kvalitet.
+Ofta introducerar kurser metoder som bubblesort och selection sort, de är 
+förvisso enkla att förstå men är i övrigt av usel kvalitet. 
+
+En metod som däremot är väldigt användbar är merge sort.
+Den består i att upprepa en operation som kallas merge.
+Den operationen undersöks i labben.
+
+\section{Syfte}
+\label{sec:Syfte}
+\noindent
+Du kommer i labben att använda dig av iteration och selektion med
+filhantering.
+
+\section{Läsanvisningar}
+\label{sec:Lasanvisningar}
+\noindent
+Du ska ha färdigställt den tidigare labben innan du fortsätter med denna.  
+
+\section{Genomförande}
+\label{sec:Genomforande}
+\noindent
+Du ska för varje uppgift skapa en headerfil med implementation som utför
+uppgiften.
+Tillsammans med header och implementation skapar du ett testprogram
+vars main-funktion demonstrerar att dina funktioner fungerar som de ska.
+
+\begin{questions}
+	\question
+	En fil innehåller heltal.
+	Du skall författa en funktion som avgör om heltalen i filen är i ordning 
+	eller inte.
+	Testprogrammet ska avgöra om filen A1 nedan är sorterad eller inte.
+  En algoritmisk beskrivning ges i \prettyref{alg:isSorted}.
+	Försök att komma på en metod på egen hand innan du tittar på algoritmen.
+
+  \begin{algorithm}
+    \caption{Avgör om en fil är sorterad}\label{alg:isSorted}
+    \begin{algorithmic}
+      \Require Filen A innehåller numeriska värden
+      \Ensure Filen A är sorterad
+      \State{ $a\gets readValue(A)$ }
+      \While{ $notEndOfFile(A)$ }
+        \State{ $b\gets readValue(A)$ }
+        \If{ $a > b$}
+          \State \Return false
+        \EndIf
+        \State $a\gets b$
+      \EndWhile
+      \State \Return true
+    \end{algorithmic}
+  \end{algorithm}
+
+	\question 
+	Två filer, A och B är sorterade.
+	(Kontrollera detta med den funktion du författat i uppgiften ovan.)
+	Utifrån filerna ska du skapa en fil som innehåller samtliga element i
+	sorterad ordning.
+	Denna operation kallas för en merge.
+  En algoritmisk beskrivning ges i \prettyref{alg:merge}.
+	Försök att implementera den på egen hand innan du tittar på algoritmen.
+
+  \begin{algorithm}
+    \caption{Merge med två filer}\label{alg:merge}
+    \begin{algorithmic}
+      \Require Filerna A och B är sorterade enligt algoritm~\ref{alg:isSorted}
+      \Ensure Filen C innehåller samtliga värden från A och B i sorterad ordning
+      \State{ $a\gets readValue(A)$ }
+      \State{ $b\gets readValue(B)$ }
+      \While{ $notEndOfFile(A)$ And $notEndOfFile(B)$}
+        \Comment{ Avgör vilket värde som ska skrivas till C}
+        \If{ $a < b$ }
+          \State{Skriv a till C}
+          \State{ $a\gets readValue(A)$ }
+        \Else
+          \State{Skriv b till C}
+          \State{ $b\gets readValue(B)$ }
+        \EndIf
+      \EndWhile
+      \Comment A eller B är slut, skriv klart båda
+      \While{ $notEndOfFile(A)$ }
+        \State{Skriv a till C}
+        \State{ $a\gets readValue(A)$ }
+      \EndWhile
+      \While{ $notEndOfFile(B)$ }
+        \State{Skriv b till C}
+        \State{ $b\gets readValue(B)$ }
+      \EndWhile
+    \end{algorithmic}
+  \end{algorithm}
+
+\end{questions}
+
+Filen A hittar då på
+\begin{center}
+	\url{http://w3.miun.se/dt028g/attach/161/A}.
+\end{center}
+
+Filen B finner du på
+\begin{center}
+	\url{http://w3.miun.se/dt028g/attach/162/B}.
+\end{center}
+
+Filen A1 finner du på
+\begin{center}
+	\url{http://w3.miun.se/dt028g/attach/163/A1}.
+\end{center}
+
+
+%%% EXAMINATION %%%
+\input{exam}
+
+%\bibliography{literature}
+\end{document}

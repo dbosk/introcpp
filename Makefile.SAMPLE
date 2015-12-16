@@ -1,0 +1,33 @@
+# Makefile som demonstrerar typiska finesser
+# Ange vilken kompilator vi vill ha, variabeln CPPC får textvärdet g++
+#CXX 		= 	g++
+# Argument till kompilatorn. -Wall står för Warnings all - mycket bra att ha.
+# Dina program ska inte ge några varningar då de kompileras.
+CXXFLAGS	=	-Wall
+
+# Vilka filer vi vill kompilera
+SRC		= 	main.cpp
+HEADERS	= 	
+
+# Programmets namn
+BUILD_TARGET	= labb1
+
+# ---REGLER---
+
+# Formen är alltid
+# target: requires
+
+# Ett mål/target kan vara ett filnamn och kan då läsas ut som: 
+# För att skapa "target" behövs "requires"
+
+# all är målet då man bara skriver "make", all ska stå först.
+all: build run zip-lab-for-submission
+# För att köra run och andra mål skriver man "make run"
+run: build
+	./$(BUILD_TARGET)
+build: $(BUILD_TARGET)
+# Låt oss göra ett mål för labbinlämningen också.
+zip-lab-for-submission:
+	tar -cvf $(BUILD_TARGET).tar $(FILES) *.h Makefile
+${BUILD_TARGET): $(SRC) $(HEADERS)
+	$(CXX) $(CXXFLAGS) -o $(BUILD_TARGET) $(SRC)

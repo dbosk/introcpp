@@ -1,0 +1,114 @@
+\documentclass[a4paper]{miunasgn}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english,swedish]{babel}
+\usepackage{url,hyperref}
+\usepackage{prettyref,varioref}
+\usepackage{natbib}
+\usepackage{listings}
+\usepackage[today,nofancy]{svninfo}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage[natbib,varioref,prettyref,listings,algorithm]{miunmisc}
+%\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+%\renewcommand{\algorithmicensure}{\textbf{Output:}}
+%Sample lab assignment, based on a Lab by Daniel Bosk. 
+
+%\svnInfo $Id$
+%\printanswers
+
+\courseid{dt028g}
+\course{Introduktion till programmering i C++}
+\assignmenttype{Laboration}
+\title{Fil IO, texthantering}
+\author{Martin Kjellqvist\footnote{%
+	E-post: \href{mailto:martin.kjellqvist@miun.se}{martin.kjellqvist@miun.se}.
+}}
+%\date{\svnId}
+
+\begin{document}
+\maketitle
+\thispagestyle{foot}
+%\tableofcontents
+
+\section{Introduktion}
+\label{sec:Introduktion}
+\noindent
+Det är ofta nödvändigt att formatera om data i filer.
+Ibland görs det för läsbarhet, ibland görs det för att passa som indata till 
+olika program.
+
+\section{Syfte}
+\label{sec:Syfte}
+\noindent
+Syftet med uppgiften är att ge färdighet i enkel texthantering och 
+filhentering.
+Uppgiften ligger till grund för filhenteringen i vidare labbuppgifter.
+
+\section{Läsanvisningar}
+\label{sec:Lasanvisningar}
+\noindent
+%\input{literature.tex}
+Du ska vara klar med samtliga moment fram till och med filhantering. 
+
+\section{Genomförande}
+\label{sec:Genomforande}
+\noindent
+Du ska skapa ett fristående program som utför uppgifterna nedan.
+Börja med att lösa uppgift ett och färdigställ den uppgiften innan du
+börjar på uppgift 2.
+
+Ditt program ska läsa filerna som omnämns ifrån ''current working directory''.
+Samtliga filer är i textformat med ''\textbackslash{}n'' som radslut.
+Du kan om du önskar använda pipes och redirects för att lösa filinläsningen och 
+utskriften istället för \texttt{std::ifstream} och \texttt{std::ofstream}.
+Kommentera i sådant fall det i koden tillsammans med exempel på hur programmet 
+används.
+
+\begin{questions}
+	\question
+	Filen \texttt{names.txt} innehåller namn och personnummer på följande form.
+	Filen innehåller flera personer.
+	\begin{verbatim}
+Förnamn Efternamn
+YYMMDDNNNN
+Adressrad
+	\end{verbatim}
+
+	Din uppgift är att omvandla indatat till formen:
+	\begin{verbatim}
+Efternamn, Förnamn
+Adressrad
+	\end{verbatim}
+
+	Filen \texttt{names.txt} finner du på:
+	\begin{center}
+		\url{http://w3.miun.se/dt028g/attach/164/names.txt}.
+	\end{center}
+
+	\question
+	Utdatat ska indikera om personen är en man eller kvinna.
+	Exempelvis för en man kan det stå:
+	\begin{verbatim}
+Efternamn, Förnamn [M]
+Adressrad
+	\end{verbatim}
+	
+\end{questions}
+
+
+%%% EXAMINATION %%%
+\input{exam.tex}
+
+
+\section{Algoritmer}
+\label{sec:Algoritmer}
+Googla algoritmen för att avgöra om en person är man eller kvinna.
+En ledning är att du inte kan se det på namnet.
+En del av problemet är att lista sig till hur man avgör om en person är man 
+eller kvinna.
+
+
+%\bibliography{literature}
+\end{document}
+
