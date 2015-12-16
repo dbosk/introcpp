@@ -1,0 +1,85 @@
+% $Id$
+% Author: Daniel Bosk <daniel.bosk@miun.se>
+\documentclass[a4paper]{miunasgn}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english,swedish]{babel}
+\usepackage{url,hyperref}
+\usepackage{prettyref,varioref}
+\usepackage{natbib}
+\usepackage{color,listings}
+\usepackage[plain]{algorithm}
+\usepackage{algpseudocode}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[nofancy,today]{svninfo}
+\usepackage[natbib,varioref,prettyref,listings,algorithm]{miunmisc}
+
+\svnInfo $Id$
+%\printanswers
+
+\theoremstyle{definition}
+\newtheorem{example}{Exempel}
+
+\courseid{DT028G}
+\course{Introduktion till programmering}
+\assignmenttype{Projekt}
+\title{Game of Life}
+\author{Daniel Bosk\footnote{%
+	Detta verk är tillgängliggjort under licensen Creative Commons 
+	Erkännande-DelaLika 2.5 Sverige (CC BY-SA 2.5 SE).
+	För att se en sammanfattning och kopia av licenstexten besök URL 
+	\url{http://creativecommons.org/licenses/by-sa/2.5/se/}.
+}}
+\date{\svnId}
+
+\begin{document}
+\maketitle
+\thispagestyle{foot}
+\tableofcontents
+
+
+\section{Introduktion}
+\noindent
+\dots
+
+
+\section{Syfte}
+\noindent
+Syftet är att fördjupa dina kunskaper inom och utveckla din vana för 
+programmering.
+
+
+\section{Teori}
+\label{sec:Theory}
+\noindent
+\dots
+
+
+\section{Uppgift}
+\label{sec:Tasks}
+\noindent
+\input{grades.tex}
+
+\subsection{Grunduppgift}
+\noindent
+\dots
+
+\subsection{Extrauppgift C}
+\noindent
+\dots
+
+\subsection{Extrauppgift B}
+\noindent
+\dots
+
+\subsection{Extrauppgift A}
+\noindent
+\dots
+
+
+%%% EXAMINATION %%%
+\input{exam.tex}
+
+
+\bibliography{literature}
+\end{document}
