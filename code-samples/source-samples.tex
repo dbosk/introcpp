@@ -1,0 +1,311 @@
+% $Id$
+\documentclass[a4paper,portrait]{miunart} % students are not allowed to use the
+										% university logo
+\usepackage[english,swedish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{natbib}
+% \usepackage{SIunits}
+\usepackage{listings}
+\usepackage{varioref,prettyref}
+\usepackage{url,hyperref}
+\usepackage[varioref,prettyref,natbib,listings]{miunmisc}
+
+\title{Exempelsamling - idiomatisk c++}
+\author{Martin Kjellqvist\footnote{%
+	E-post: \href{mailto:martin.kjellqvist@miun.se}{martin.kjellqvist@miun.se}.
+	Ämne: C++.
+}}
+\date{den 18 Augusti 2014}
+
+\lstset{language=C++}
+\begin{document}
+\maketitle
+\begin{abstract}
+	\noindent
+	Denna exempelsamling har för avsikt att vara en samling idiomatiska och 
+	välskrivna kodsnuttar för att lösa vanliga problem. Problem som man kan 
+	tänkas stöta på under någon av c++ kurserna som ges på universitetet.  
+	\keywords{c++, c++11, problemlösning, algoritmer}
+\end{abstract}
+
+
+\section{Introduktion}
+\label{sec:intro}
+\noindent
+Avsikten med denna exempelsamlig är flerfaldig. Huvudsyftet är att ha exempel 
+att peka på i undervisningen på Mittuniversitetet. Som student kan man gärna 
+använda dessa exempel som mallar för egen kod i projekt och labbar. Man måste 
+då naturligtvis referera till denna exempelsamling och det exempel man använt. 
+
+Texten är skriven för den som vill lära sig att programmera i c++ och c++ 
+11. I framtiden kommer tillägg att göras för c++ 14. 
+
+Jag beskriver samlingen som idiomatisk då jag har strävat efter att använda de 
+c++ mekanismer som \emph{bör} användas, hellre än att göra exemplen så enkla 
+som möjligt. I flera exempel existerar inte idiomatiska lösningar. 
+
+Kommentarer till exemplen är avsedda att motivera stil och struktur samt att 
+beskriva idiom.
+
+Samlingen spänner över hela språket.  Samlingen är således aktuell under hela 
+din utbildning.
+
+Exempelsamlingen är avsedd att komplettera föreläsningsmaterial och 
+labbinstruktioner.  Om ni någonsin får nöjet att bevittna någon av författarens 
+föreläsningar på området kommer ni förmodligen märka likheter med något exempel 
+här. 
+
+Jag ger referenser till exempel som jag inte betraktar som triviala, eller som 
+inte är direkt härledda ur c++ standarden.
+
+Stilen som förespråkas är en utökning av K\&R-style.
+\pagebreak
+\tableofcontents
+\pagebreak
+\section{Grundläggande byggstenar}
+\label{sec:basics}
+\noindent
+Exempel som kan användas för en c++ introduktion.
+\subsection{Hello World}
+\label{sec:helloworld}
+\lstinputlisting[caption={Hello world}]{1.1-hello-world.cpp}
+
+Signaturen för main måste enligt standarden vara \texttt{int main()} eller 
+\texttt{int main(int argc, char* argv[])}.  Kompilatorer kan tillåta 
+ytterligare vaianter på \texttt{main} men det är sällsynt (§3.6.1(2))
+\cite{ISO:n3337}. 
+
+Man bör fördera att uttryckligen specificera namnrymden \texttt{std::}. Det 
+ökar läsbarheten och det är en god vana. Se även \ref{sec:class.headers}.
+
+Operatorer ska omges av mellanslag för läsbarhet. Parenteser kramar innehållet.
+
+\texttt{using namespace std;} som ses i många läroböcker är ett ofog i de allra 
+flesta situationer. 
+
+%\note{Hello hello world}
+\pagebreak
+\subsection{Headerfiler}
+\label{sec:headers}
+En homogen form för headerfiler är viktig.  Headerfilen kommer läsas av alla 
+som vill använda dina funktioner i framtiden. Headerfilen används också för att 
+generera dokumentation. 
+
+\lstinputlisting[caption={Enkel header}]{1.2-headers.h}
+
+
+\emph{Include guards} skrivs på formen \texttt{\#ifndef \_HEADERNAMN}. Använd 
+inte \texttt{\#pragma once}-direktivet. Det är kompilatorberoende (även om 
+många kompilatorer stödjer det).
+
+Man ska under inga omständigheter föra in andra namn än de som definieras av 
+headern i scopet av en headerfil. Det är en oönskad och oväntad sidoeffekt.  
+Därför anges alla typer som inte definieras i headern med sitt fulla namn, 
+exempelvis \texttt{std::string}. \emph{using}-deklarationer ska alltså undvikas 
+då det introducerar namn i onödan.
+
+Kommentera funktioner i header enligt det format som bjuds av 
+dokumentationssystemet.
+
+Om man har många headerfiler i sitt projekt är det lämpligt att man ger dem en 
+hierarkisk struktur i filsystemet. 
+
+En headerfil kompileras aldrig fristående, utan är alltid en del av en 
+\emph{translation unit}. (§2.1) \cite{ISO:n3337}.
+
+\pagebreak
+\subsection{Headerfiler för klasser}
+\label{sec:class.headers}
+En header för en klassdefinition har en liknande struktur som en header som 
+innehåller funktioner.  Man bör som regel undvika att blanda funktioner och 
+klassdefinitioner. Undantag görs då funktionen är nära relaterad till 
+klassdefinitionen (exempelvis operatoröverlagringar). 
+
+\lstinputlisting[caption={Klassheader}]{1.3-class-headers.h}
+
+\emph{Include guards} är helt nödvändiga för att uppfylla
+\emph{One definition rule} per §3.2, \cite{ISO:n3337}
+
+
+Kommentarer måste inte överdrivas. Vanliga accessormetoder behöver inte 
+minutiöst beskrivas med kommentarer, de är självklara hur de fungerar. 
+
+Konstruerare bör deklareras \emph{explicit} om ens design inte kräver implicit 
+omvandling av argumenten (§12.3.1) \cite{ISO:n3337}. Implicita omvandlingar kan 
+ge väldigt bekväm syntax, men bör tillämpas med varsamhet.
+
+Återigen, man ska under inga omständigheter föra in andra namn än de som 
+definieras av headern i scopet av en headerfil. Det är en oönskad och oväntad 
+sidoeffekt.  Därför anges alla typer som inte definieras i headern med sitt 
+fulla namn, exempelvis \texttt{std::string}. \emph{using}-deklarationer ska 
+alltså undvikas.
+
+\pagebreak
+\subsection{Headerfiler för templates}
+\label{sec:class.template.headers}
+
+En template-header innehåller som regel även implementationen av alla delar 
+eftersom mallen instansieras i den translationsenhet som använder den.  Klassen 
+kan inte kompileras innan instansiering om inte explicita instansieringar eller 
+specialiseringar angivits, se §14.1 \cite{ISO:n3337}.
+
+\lstinputlisting[caption={Header med mallklass}]{1.4-template-headers.h}
+
+Vertikalt tomrum och Kommentarer har tagits bort för att undvika sidbrytning 
+i exemplet.
+
+Namnen på mallparametrarna har en etablerad konvention från 
+standardbiblioteket. Exempelvis används \texttt{T} för enkla värdetyper, 
+\texttt{PRED} för predikat ofta definerade som funktionsobjekt eller 
+lambdauttryck. En vanlig specialisering av \texttt{PRED} är \texttt{COMP} 
+vilket är en komparator som tar två argument av typen \texttt{T} och motsvarar 
+semantiskt operationen \texttt{arg1 < arg2}. \texttt{IT} representerar en 
+generell iterator. Vanliga specialiseringar beskrivs i §24.2.1 (2) 
+\cite{ISO:n3337} och implementeras gärna med \emph{type\_traits}
+
+\texttt{using value\_type = T;} i klassdefinitionen är användbart eftersom det 
+gör det möjligt att hänvisa till malltypen \texttt{T} från en instans. Skriv en 
+\texttt{using}-deklaration för varje mallparameter. Ge typen ett namn som väl 
+berkriver dess betydelse.  SFINAE-typer, här 
+\texttt{enable\_if<is\_numeric<T>::value, T>::type>} har naturligtvis 
+ingen relaterad \texttt{typedef}. 
+
+Funktionsmallen kommer tack vare specialiseringen \texttt{const point<T>\&} 
+bara specialiseras för giltiga \texttt{point} instanser.
+
+Headers för malltyper är mer svårlästa än motsvarande icke-mall. Man kan 
+underlätta läsbarheten genom att för längre funktioner inte definiera 
+funktionerna \emph{inline}. Notera att en \emph{inline}-definierad funktion 
+påverkar kompilatorns inte optimeringsprocess. 
+
+
+\pagebreak
+\section{Nytt i C++11}
+\label{sec:new-stuff}
+auto, decltype, constexpr. using.
+move,
+lambda,
+chrono,
+random,
+thread.
+user-defined literals.
+
+\pagebreak
+\section{Iteration}
+\label{sec:iteration}
+
+De vanliga iterationskonstruktionerna med \emph{for} och \emph{while} har tack 
+vare ett utförligt standardbiliotek har i en uppsjö av situationer fått mer 
+läsbara alternativ. Range-based \emph{for} är också att föredra över vanlig 
+\emph{for}.
+
+Några vanliga situationer illustreras nedan.  
+
+\subsection{for-satsen}
+\label{sec:iteration:for}
+
+Använd \emph{for} för olika typer av uppräkningar. Typiska tillämpningar är 
+i synnerhet:
+\begin{itemize}
+	\item{Uppräkning av ett numeriskt intervall. $[0..10[$, $[10..0]$ etc.}
+	\item{Uppräkning av några eller alla element i en \emph{container}.}
+\end{itemize}
+			
+Strävan då man tecknar sina \emph{for}-satser är förstås att avsikt och 
+funktion ska vara så tydig som möjligt. Med det i åtanke betraktas följande 
+exempel:
+
+\lstinputlisting[caption={for-sats}]{2.1-for.cpp}
+
+Använd dessa former då uppräkningen explicit kräver uppräkningsindex; ofta 
+behövs inte detta index. Ej teckensatta typer och i synnerhet \texttt{size\_t} 
+bör användas för uppräkningar i containers.
+
+Se till exempel följande exempel att beräkna medelvärdet i en \emph{container}.
+
+\lstinputlisting[caption={for-sats för 
+container}]{2.2-for-container-1.cpp}
+
+Index används för element-access, men är i övrigt onödigt. Lösningen är direkt 
+men onödigt pratig. Man kan även göra den mer generell med hjälp av iteratorer. 
+
+\lstinputlisting[caption={for-sats för container med 
+iteratorer}]{2.2-for-container-2.cpp}
+
+\emph{sample1} är lång och otymplig. Typnamnet för iteratorn är ointressant och 
+tillför inget för förståelsen av koden.  \emph{sample2} är betydligt mer läsbar 
+tack vare att typnamnet för iteratorn ersätts av malltypen \texttt{IT}.  
+\emph{sample2} illustrerar också hur man enkelt kan omvandla en iteratorbaserad 
+funktion till en containerbaserad funktion.
+
+Avsikten att iterera över alla element i vektorn är uttryckt på liknande sätt 
+i alla tre ovanstående exempel.
+
+För att slippa det otympliga typnamnet kan låta kompilatorn deducera typen med 
+hjälp av \emph{auto}. (§7.1.6.4) \cite{ISO:n3337}
+
+\lstinputlisting[caption={for-sats för container med 
+auto}]{2.2-for-container-auto.cpp}
+
+Kompilatorn deducerar typen och vi kan använda iteratorn på vanligt sätt.
+
+\emph{Range}-baserade \emph{for}-satser gör det ännu enklare att iterera över 
+alla element. (§6.5) \cite{ISO:n3337}. En mallösning gör den än mer flexibel. 
+
+\lstinputlisting[caption={range-baserad for-sats 
+}]{2.2-for-container-range.cpp}
+
+Alla vektorer vars \texttt{value\_type} stödjer \texttt{+=} kan summeras på 
+detta sätt.  Man kan även tänka sig att ta alla iteratorbaserade containers med 
+en helt generell malltyp och en SFINAE lösning baserad på existensen av 
+medlemmen \texttt{T::iterator}. 
+
+Valet mellan ovanstående alternativ ska baseras på läsbarhet. Samtliga 
+alternativ har likvärdiga prestanda. 
+
+Ofta finns det redan funktioner i standardbiblioteket för att handskas med 
+vanliga operationer. Både \texttt{std::for\_each} och \texttt{std::accumulate} 
+är värda att nämnas. 
+
+\lstinputlisting[caption={for-satsalternativ 
+i \texttt{std::}}]{2.2-for-stdlib.cpp}
+
+\emph{sample1} uttrycker uppräkningen över samtliga element väldigt tydligt med 
+\texttt{std::for\_each}. Lambdauttrycket fångar \texttt{sum} som referens och 
+summerar som tidigare exempel. 
+
+\emph{sample2} uttrycker summeringen i ett enkelt funktionsanrop. Notera att 
+heltalsargumentet krävs för att \emph{std::accumulate} ska få en returtyp.  En 
+returtyp kan inte deduceras.
+\emph{sample3} illustrerar användningen av {std::accumulate} i de fall 
+värdetypen är en malltyp. 
+
+Samtliga exempel har likvärdig prestanda och i detta specifika fall är 
+lösningen med \texttt{std::accumulate} att föredra. \texttt{<algorithm>} 
+innehåller en uppsjö av olika mallar för att förenkla och tydliggöra avsikten 
+av vanligt förekommande algoritmer.
+
+\pagebreak[4]
+Som avrundning demonstreras en lämplig implementation av en flexibel
+medelvärdesberäkning.  
+\lstinputlisting[caption={Medelvärdesberäkning}]{2.2-for-stdlib-final.cpp}
+
+Tack vare funktionerna i \texttt{<algorithm>} och \texttt{<iterator>} är koden 
+självförklarande och ger en medelvärdesberäkning som fungerar för alla 
+upptänkliga konstruktioner, iteratorer, vanliga pekare och arrayer. Alla 
+containers i standardbiblioteket kan också användas. 
+
+\pagebreak
+\section{Sortering}
+\label{sec:sorting}
+I detta avsnitt behandlas olika sätt att nyttja \texttt{std::sort}, samt en 
+radix-implementation för heltalssortering. 
+\subsection{std::sort}
+\label{sec:std::sort}
+
+Standarden kräver $O(NlogN)$ §25.4.1.1.1(3) \cite{ISO:n3337} för alla indata.
+En vanlig och högpresterande implementation är introsort  \cite{intro-sort}.
+\bibliographystyle{plain}
+\bibliography{references}
+\end{document}

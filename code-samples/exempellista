@@ -1,0 +1,51 @@
+hello world
+
+headerfiler
+
+bibliotek
+
+iterationer
+- uppräkning
+- vector ( standardcontainer )
+- array
+
+fil -io från stdin
+heltal - textrader
+formattering
+
+sortering - enkel
+sortering - idiomatisk
+sortering - radix
+
+bitmanipulering
+idiomatisk maskning
+reverse bits
+
+standardbiblioteket
+- typfall iteratorer
+  lambdas
+  funktionsobjekt
+
+
+move-semantik
+  move-konstrerare
+	move-assignment
+
+r-value referenser
+  universella referenser (scott meyers)
+
+inline namespaces?
+	versionering mha #defines omgivande inline
+
+idiomatiska specialare
+copy-swap
+RAII exempel. kiss
+
+sfinae - principer
+  välja mall utifrån argumenttyper
+  same_as, enable_if
+
+lösningar på tidigare labbar med fullt utnyttjande av std::
+bullcow har försvunnit? det var ett gott exempel. 
+
+
